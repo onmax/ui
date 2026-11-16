@@ -110,7 +110,6 @@ import UBadge from './Badge.vue'
 
 const _props = withDefaults(defineProps<TabsProps<T>>(), {
   content: true,
-  defaultValue: '0',
   orientation: 'horizontal',
   unmountOnHide: true,
   valueKey: 'value',
@@ -124,6 +123,8 @@ const props = useComponentProps<TabsProps<T>>('tabs', _props)
 const appConfig = useAppConfig() as Tabs['AppConfig']
 
 const rootProps = useForwardProps(props, ['as', 'unmountOnHide'], emits)
+
+const defaultValue = computed(() => props.defaultValue ?? (props.items?.[0] && get(props.items[0], props.valueKey as string)) ?? '0')
 
 // eslint-disable-next-line vue/no-dupe-keys
 const ui = computed(() => tv({ extend: theme, ...(appConfig.ui?.tabs || {}) })({
@@ -149,7 +150,7 @@ defineExpose({
   <TabsRoot
     v-bind="rootProps"
     :model-value="props.modelValue"
-    :default-value="props.defaultValue"
+    :default-value="defaultValue"
     :orientation="props.orientation"
     :activation-mode="props.activationMode"
     data-slot="root"

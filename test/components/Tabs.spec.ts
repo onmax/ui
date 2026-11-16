@@ -54,6 +54,17 @@ describe('Tabs', () => {
     ['with custom slot', { props, slots: { custom: () => 'Custom slot' } }]
   ])
 
+  it('opens the first item when items have a `value` and no `defaultValue` is set', async () => {
+    const wrapper = await mountSuspended(Tabs, {
+      props: {
+        items: [{ label: 'Tab1', value: 'first', content: 'First content' }, { label: 'Tab2', value: 'second', content: 'Second content' }]
+      }
+    })
+
+    expect(wrapper.text()).toContain('First content')
+    expect(wrapper.text()).not.toContain('Second content')
+  })
+
   it('passes accessibility tests', async () => {
     const wrapper = await mountSuspended(Tabs, {
       props: {
